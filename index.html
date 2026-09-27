@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Bulanan Asatidz</title>
+
+    <!-- Memanggil Library jQuery dan Select2 untuk fitur Pencarian Dropdown -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f7f6; padding: 15px; margin: 0; }
+        .container { max-width: 800px; background: white; padding: 20px; margin: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+
+        .logo-container { text-align: center; margin-bottom: 10px; }
+        .logo-container img { max-width: 100px; height: auto; }
+
+        h2 { text-align: center; color: #2c3e50; font-size: 22px; margin-top: 5px; }
+        label { font-weight: bold; display: block; margin-top: 10px; font-size: 13px; color: #333; }
+        input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit; font-size: 14px; }
+
+        .select2-container .select2-selection--single { height: 36px; border: 1px solid #ccc; border-radius: 4px; padding: 3px; margin-top: 5px; }
+        .select2-container--default .select2-selection--single .select2-selection__arrow { top: 10px; }
+
+        .dynamic-box { border: 1px solid #3498db; padding: 15px; margin-top: 10px; border-radius: 5px; background-color: #eaf2f8; position: relative; }
+        .dynamic-box-siswa { border: 1px solid #e67e22; padding: 15px; margin-top: 10px; border-radius: 5px; background-color: #fdf2e9; position: relative; }
+
+        .flex-row { display: flex; gap: 15px; align-items: flex-start; }
+        .flex-item { flex: 1; min-width: 0; }
+
+        .btn-add { background: #2980b9; color: white; border: none; padding: 8px 15px; margin-top: 10px; cursor: pointer; border-radius: 4px; font-size: 13px; font-weight: bold; }
+        .btn-add-siswa { background: #d35400; color: white; border: none; padding: 8px 15px; margin-top: 10px; cursor: pointer; border-radius: 4px; font-size: 13px; font-weight: bold; }
+        .btn-remove { background: #e74c3c; color: white; border: none; padding: 6px 10px; margin-top: 32px; cursor: pointer; border-radius: 4px; font-size: 12px; height: 35px;}
+        .btn-submit { background: #27ae60; color: white; border: none; padding: 12px; width: 100%; font-size: 16px; margin-top: 25px; cursor: pointer; border-radius: 4px; font-weight: bold; }
+        .btn-submit:disabled { background: #95a5a6; cursor: not-allowed; }
+
+        @media (max-width: 600px) {
+            .flex-row { flex-direction: column; gap: 0; }
+            .btn-remove { margin-top: 10px; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h2>LAPORAN BULANAN ASATIDZ<br>MUADALAH WUSTHA</h2>
+    <form id="laporanForm">
+        <hr style="margin-top:20px; border-top:1px solid #ccc;">
+        <label>Nama Guru:</label>
+        <select id="namaGuru" class="select2-search" required>
+            <option value="">-- Cari & Pilih Nama Guru --</option>
+            <option value="AGUS M. MA'RUF ARWANI, M.Pd.">AGUS M. MA'RUF ARWANI, M.Pd.</option>
+            <option value="UST. AGUS SUGIARTO, S.E.">UST. AGUS SUGIARTO, S.E.</option>
+            <option value="UST. NUR ALIFUR RIDWAN, A.Ma.">UST. NUR ALIFUR RIDWAN, A.Ma.</option>
+            <option value="UST. AHMAD FAQIH BADRUL M, M.Pd.">UST. AHMAD FAQIH BADRUL M, M.Pd.</option>
+            <option value="UST. ASADUL UMAM MUSAFA, S.Pd.">UST. ASADUL UMAM MUSAFA, S.Pd.</option>
+            <option value="UST. M. AFIF FATHUR ROHMAN, S.Sos.">UST. M. AFIF FATHUR ROHMAN, S.Sos.</option>
+            <option value="UST. ADDINUL CHOLIS, S.Pd.">UST. ADDINUL CHOLIS, S.Pd.</option>
+            <option value="UST. RIZA FAHMI SYAH, S.Sos.">UST. RIZA FAHMI SYAH, S.Sos.</option>
+            <option value="NING ARINI FAIQOTAL HIMMAH, S.Pd.">NING ARINI FAIQOTAL HIMMAH, S.Pd.</option>
+            <option value="USTDZ. LAILA KHOIRUN NISA', S.Ag.">USTDZ. LAILA KHOIRUN NISA', S.Ag.</option>
+            <option value="UST. MUHAMMAD BAIHAQI, M.Pd.">UST. MUHAMMAD BAIHAQI, M.Pd.</option>
+            <option value="USTDZ. SITI FATIHAH NUR AINI, M.Pd.">USTDZ. SITI FATIHAH NUR AINI, M.Pd.</option>
+            <option value="UST. MUHAMMAD ZUHRI NAJIB, A.Ma.">UST. MUHAMMAD ZUHRI NAJIB, A.Ma.</option>
+            <option value="USTDZ. NAJWA RACHMANIA ZULFA">USTDZ. NAJWA RACHMANIA ZULFA</option>
+            <option value="UST. MOH. ULIL ABSOR">UST. MOH. ULIL ABSOR</option>
+            <option value="UST. M. SHOFA AR ROZIQ">UST. M. SHOFA AR ROZIQ</option>
+            <option value="UST. MOHAMAD HAQIQ AZKA, S.Pd.">UST. MOHAMAD HAQIQ AZKA, S.Pd.</option>
+            <option value="UST. MUHAMMAD RIZQUL BASITH">UST. MUHAMMAD RIZQUL BASITH</option>
+            <option value="UST. M. LUQMAN NULHAKIM">UST. M. LUQMAN NULHAKIM</option>
+            <option value="UST. AGHIS WINATA">UST. AGHIS WINATA</option>
+            <option value="UST. MAULANA RIZQI ABADI, S.Pd.">UST. MAULANA RIZQI ABADI, S.Pd.</option>
+            <option value="USTDZ. NAZA ILIL MUBAROKAH">USTDZ. NAZA ILIL MUBAROKAH</option>
+            <option value="UST. ABDUL LATIF ANSHORY, S.Pd.">UST. ABDUL LATIF ANSHORY, S.Pd.</option>
+            <option value="UST. AHMAD RENO SAPUTRA YASA">UST. AHMAD RENO SAPUTRA YASA</option>
+        </select>
+
+        <hr style="margin-top:20px; border-top:1px solid #ccc;">
+        <h4 style="margin-bottom: 5px; color: #2980b9;">Detail Mengajar</h4>
+
+        <div id="mengajarContainer">
+            <div class="dynamic-box flex-row">
+                <div class="flex-item">
+                    <label>Mata Pelajaran:</label>
+                    <select class="mapel select2-search" required>
+                        <option value="">-- Cari Mapel --</option>
+                        <option value="NAHWU">NAHWU</option>
+                        <option value="AKHLAK">AKHLAK</option>
+                        <option value="TAUHID">TAUHID</option>
+                        <option value="USHUL FIQH">USHUL FIQH</option>
+                        <option value="FIQH">FIQH</option>
+                        <option value="HADIST">HADIST</option>
+                        <option value="TAJWID">TAJWID</option>
+                        <option value="SHOROF">SHOROF</option>
+                        <option value="I'LAL">I'LAL</option>
+                        <option value="TAREKH">TAREKH</option>
+                        <option value="PEGON">PEGON</option>
+                        <option value="MATEMATIKA FIQH">MATEMATIKA FIQH</option>
+                        <option value="KE-NU-AN">KE-NU-AN</option>
+                        <option value="BAHASA ARAB">BAHASA ARAB</option>
+                        <option value="TAFSIR">TAFSIR</option>
+                        <option value="IMLA'">IMLA'</option>
+                        <option value="BAHASA INDONESIA">BAHASA INDONESIA</option>
+                        <option value="BAHASA INGGRIS">BAHASA INGGRIS</option>
+                        <option value="MATEMATIKA">MATEMATIKA</option>
+                        <option value="PPKN">PPKN</option>
+                        <option value="IPA">IPA</option>
+                        <option value="TIK">TIK</option>
+                        <option value="PENJASKES">PENJASKES</option>
+                    </select>
+                </div>
+                <div class="flex-item">
+                    <label>Kelas:</label>
+                    <select class="kelas select2-search" required>
+                        <option value="">-- Cari Kelas --</option>
+                        <option value="7 A">7 A</option>
+                        <option value="7 B">7 B</option>
+                        <option value="8 A">8 A</option>
+                        <option value="8 B">8 B</option>
+                        <option value="9 A">9 A</option>
+                        <option value="9 B">9 B</option>
+                    </select>
+                </div>
+                <div class="flex-item">
+                    <label>Batasan Materi:</label>
+                    <textarea class="materi" rows="1" required></textarea>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn-add" onclick="tambahMapel()">+ Tambah Kelas/Mapel Lain</button>
+
+        <hr style="margin-top:25px; border-top:1px solid #ccc;">
+        <h4 style="margin-bottom: 5px; color: #d35400;">Siswa Bermasalah (Opsional)</h4>
+
+        <div id="siswaContainer">
+            <div class="dynamic-box-siswa flex-row">
+                <div class="flex-item">
+                    <label>Nama Siswa:</label>
+                    <input type="text" class="nama-siswa" placeholder="Kosongkan jika tak ada">
+                </div>
+                <div class="flex-item">
+                    <label>Kelas:</label>
+                    <select class="kelas-siswa select2-search">
+                        <option value="">-- Cari Kelas --</option>
+                        <option value="7 A">7 A</option>
+                        <option value="7 B">7 B</option>
+                        <option value="8 A">8 A</option>
+                        <option value="8 B">8 B</option>
+                        <option value="9 A">9 A</option>
+                        <option value="9 B">9 B</option>
+                    </select>
+                </div>
+                <div class="flex-item">
+                    <label>Masalahnya Apa:</label>
+                    <textarea class="masalah-siswa" rows="1"></textarea>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn-add-siswa" onclick="tambahSiswa()">+ Tambah Siswa Bermasalah</button>
+
+        <hr style="margin-top:25px; border-top:1px solid #ccc;">
+
+        <label>Kendala Ketika Mengajar:</label>
+        <textarea id="kendala" rows="3" required></textarea>
+
+        <label>Usulan Untuk Sekolah:</label>
+        <textarea id="usulan" rows="3" required></textarea>
+
+        <button type="submit" class="btn-submit" id="btnSubmit">Kirim Laporan</button>
+    </form>
+</div>
+
+<script>
+    // ==== GANTI dengan URL Web App Apps Script kamu (yang berakhiran /exec) ====
+    const SCRIPT_URL = "https://script.google.com/macros/s/GANTI_DENGAN_ID_DEPLOYMENT_ANDA/exec";
+
+    $(document).ready(function() {
+        $('.select2-search').select2({ width: '100%' });
+    });
+
+    const opsiMapel = `
+        <option value="">-- Cari Mapel --</option>
+        <option value="NAHWU">NAHWU</option>
+        <option value="AKHLAK">AKHLAK</option>
+        <option value="TAUHID">TAUHID</option>
+        <option value="USHUL FIQH">USHUL FIQH</option>
+        <option value="FIQH">FIQH</option>
+        <option value="HADIST">HADIST</option>
+        <option value="TAJWID">TAJWID</option>
+        <option value="SHOROF">SHOROF</option>
+        <option value="I'LAL">I'LAL</option>
+        <option value="TAREKH">TAREKH</option>
+        <option value="PEGON">PEGON</option>
+        <option value="MATEMATIKA FIQH">MATEMATIKA FIQH</option>
+        <option value="KE-NU-AN">KE-NU-AN</option>
+        <option value="BAHASA ARAB">BAHASA ARAB</option>
+        <option value="TAFSIR">TAFSIR</option>
+        <option value="IMLA'">IMLA'</option>
+        <option value="BAHASA INDONESIA">BAHASA INDONESIA</option>
+        <option value="BAHASA INGGRIS">BAHASA INGGRIS</option>
+        <option value="MATEMATIKA">MATEMATIKA</option>
+        <option value="PPKN">PPKN</option>
+        <option value="IPA">IPA</option>
+        <option value="TIK">TIK</option>
+        <option value="PENJASKES">PENJASKES</option>
+    `;
+
+    const opsiKelas = `
+        <option value="">-- Cari Kelas --</option>
+        <option value="7 A">7 A</option>
+        <option value="7 B">7 B</option>
+        <option value="8 A">8 A</option>
+        <option value="8 B">8 B</option>
+        <option value="9 A">9 A</option>
+        <option value="9 B">9 B</option>
+    `;
+
+    function tambahMapel() {
+        const container = document.getElementById("mengajarContainer");
+        const box = document.createElement("div");
+        box.className = "dynamic-box flex-row";
+        box.innerHTML = `
+            <div class="flex-item">
+                <label>Mata Pelajaran:</label>
+                <select class="mapel select2-search" required>${opsiMapel}</select>
+            </div>
+            <div class="flex-item">
+                <label>Kelas:</label>
+                <select class="kelas select2-search" required>${opsiKelas}</select>
+            </div>
+            <div class="flex-item">
+                <label>Batasan Materi:</label>
+                <textarea class="materi" rows="1" required></textarea>
+            </div>
+            <button type="button" class="btn-remove" onclick="this.parentElement.remove()">Hapus</button>
+        `;
+        container.appendChild(box);
+        $(box).find('.select2-search').select2({ width: '100%' });
+    }
+
+    function tambahSiswa() {
+        const container = document.getElementById("siswaContainer");
+        const box = document.createElement("div");
+        box.className = "dynamic-box-siswa flex-row";
+        box.innerHTML = `
+            <div class="flex-item">
+                <label>Nama Siswa:</label>
+                <input type="text" class="nama-siswa">
+            </div>
+            <div class="flex-item">
+                <label>Kelas:</label>
+                <select class="kelas-siswa select2-search">
+                    ${opsiKelas}
+                </select>
+            </div>
+            <div class="flex-item">
+                <label>Masalahnya Apa:</label>
+                <textarea class="masalah-siswa" rows="1"></textarea>
+            </div>
+            <button type="button" class="btn-remove" onclick="this.parentElement.remove()">Hapus</button>
+        `;
+        container.appendChild(box);
+        $(box).find('.select2-search').select2({ width: '100%' });
+    }
+
+    document.getElementById("laporanForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const btnSubmit = document.getElementById("btnSubmit");
+        btnSubmit.innerText = "Mengirim...";
+        btnSubmit.disabled = true;
+
+        let detailMengajarString = "";
+        const mapelInputs = document.querySelectorAll(".mapel");
+        const kelasInputs = document.querySelectorAll(".kelas");
+        const materiInputs = document.querySelectorAll(".materi");
+        for(let i = 0; i < mapelInputs.length; i++) {
+            detailMengajarString += `[${i+1}] Mapel: ${mapelInputs[i].value} | Kelas: ${kelasInputs[i].value} | Materi: ${materiInputs[i].value}\n`;
+        }
+
+        let detailSiswaString = "";
+        const namaSInputs = document.querySelectorAll(".nama-siswa");
+        const kelasSInputs = document.querySelectorAll(".kelas-siswa");
+        const masalahSInputs = document.querySelectorAll(".masalah-siswa");
+
+        let noSiswa = 1;
+        for(let i = 0; i < namaSInputs.length; i++) {
+            if(namaSInputs[i].value.trim() !== "") {
+                detailSiswaString += `[${noSiswa}] Nama: ${namaSInputs[i].value} | Kelas: ${kelasSInputs[i].value} | Masalah: ${masalahSInputs[i].value}\n`;
+                noSiswa++;
+            }
+        }
+
+        if(detailSiswaString === "") {
+            detailSiswaString = "Tidak ada siswa bermasalah.";
+        }
+
+        const data = {
+            namaGuru: document.getElementById("namaGuru").value,
+            detailMengajar: detailMengajarString.trim(),
+            detailSiswa: detailSiswaString.trim(),
+            kendala: document.getElementById("kendala").value,
+            usulan: document.getElementById("usulan").value
+        };
+
+        // ==== INI PENGGANTI google.script.run: pakai fetch() ke Web App Apps Script ====
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            // "text/plain" sengaja dipakai supaya browser tidak melakukan CORS preflight,
+            // yang tidak didukung dengan baik oleh Apps Script.
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(result => {
+            if (result.status !== "sukses") {
+                throw new Error(result.message || "Gagal menyimpan data");
+            }
+            alert("Alhamdulillah, Laporan berhasil dikirim!");
+
+            document.getElementById("laporanForm").reset();
+            $('.select2-search').val('').trigger('change');
+
+            const mContainer = document.getElementById("mengajarContainer");
+            while (mContainer.children.length > 1) { mContainer.removeChild(mContainer.lastChild); }
+
+            const sContainer = document.getElementById("siswaContainer");
+            while (sContainer.children.length > 1) { sContainer.removeChild(sContainer.lastChild); }
+
+            btnSubmit.innerText = "Kirim Laporan";
+            btnSubmit.disabled = false;
+        })
+        .catch(error => {
+            alert("Gagal mengirim laporan: " + error.message);
+            btnSubmit.innerText = "Kirim Laporan";
+            btnSubmit.disabled = false;
+        });
+    });
+</script>
+
+</body>
+</html>
