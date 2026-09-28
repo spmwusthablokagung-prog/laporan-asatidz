@@ -88,6 +88,11 @@ a{color:inherit;}
 .login-card h1{font-size:22px;margin-bottom:4px;}
 .login-card p.sub{color:var(--muted);font-size:13.5px;margin:0 0 22px;}
 .field{margin-bottom:16px;}
+.pw-field{position:relative;}
+.pw-field input{padding-right:46px !important;}
+.pw-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:34px;height:34px;border:none;background:transparent;font-size:16px;border-radius:8px;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.pw-eye:hover{background:var(--surface-2);}
+.pw-eye.on{color:var(--primary-2);}
 .field label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:6px;letter-spacing:.01em;}
 .field input, .field select, .field textarea{
   width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:var(--radius-sm);
@@ -213,6 +218,7 @@ tbody tr:hover{background:var(--surface-2);}
 .tag-role-kepsek{background:var(--accent-soft);color:var(--accent);}
 .tag-role-waka{background:var(--primary-soft);color:var(--primary-2);}
 .row-actions{display:flex;gap:6px;flex-wrap:nowrap;white-space:nowrap;}
+.row-actions.center{justify-content:center;}
 .link-count{background:none;border:none;color:var(--primary-2);font-weight:700;font-size:14px;text-decoration:underline;padding:0;}
 
 .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
@@ -307,7 +313,10 @@ input[type="month"]::-webkit-calendar-picker-indicator{
     </div>
     <div class="field">
       <label>Password</label>
-      <input type="password" id="loginPass" placeholder="Masukkan password">
+      <div class="pw-field">
+        <input type="password" id="loginPass" placeholder="Masukkan password">
+        <button type="button" class="pw-eye" id="loginPassToggle" onclick="toggleLoginPassword()" title="Lihat password" aria-label="Lihat password">&#128065;</button>
+      </div>
     </div>
     <button class="btn btn-primary btn-block" id="loginSubmitBtn" onclick="doLogin()" disabled>Memuat data&hellip;</button>
     <div class="login-hint" id="loginSyncStatus" style="display:none;color:var(--danger);"></div>
@@ -632,6 +641,16 @@ function holdLoginLock(userId){
 function releaseLoginLock(){
   if(_releaseLoginLock){ const r = _releaseLoginLock; _releaseLoginLock = null; r(); }
 }
+function toggleLoginPassword(){
+  const input = document.getElementById('loginPass');
+  const btn = document.getElementById('loginPassToggle');
+  const show = input.type==='password';
+  input.type = show ? 'text' : 'password';
+  btn.classList.toggle('on', show);
+  btn.title = show ? 'Sembunyikan password' : 'Lihat password';
+  btn.setAttribute('aria-label', btn.title);
+  input.focus();
+}
 async function doLogin(){
   const u = document.getElementById('loginUser').value.trim();
   const p = document.getElementById('loginPass').value;
@@ -664,6 +683,9 @@ function showLoginScreen(){
   document.getElementById('loginScreen').style.display='flex';
   document.getElementById('loginUser').value='';
   document.getElementById('loginPass').value='';
+  document.getElementById('loginPass').type='password';
+  const eye = document.getElementById('loginPassToggle');
+  if(eye){ eye.classList.remove('on'); eye.title='Lihat password'; }
 }
 function doLogout(){
   showLoginScreen();
@@ -1189,7 +1211,7 @@ function renderProgramPage(){
       <td>${escapeHtml(p.nama)}</td>
       <td>${escapeHtml(wakaMap[p.wakaId] || '-')}</td>
       <td><span class="tag tag-${p.jenis}">${jenisLabel(p.jenis)}</span></td>
-      <td><div class="row-actions">
+      <td><div class="row-actions center">
         ${ajukanBtn}
         ${isKepsek || isLocked ? '' : `<button class="btn btn-ghost btn-sm" onclick="openProgramModal('${p.id}')">Edit</button>`}
         ${isKepsek ? '' : `<button class="btn btn-danger btn-sm" onclick="deleteProgram('${p.id}')">Hapus</button>`}
@@ -1212,7 +1234,7 @@ function renderProgramPage(){
       </div>
       <div class="tbl-wrap">
       <table>
-        <thead><tr>${bulkCheckboxHeaderCell('programs', programs.map(p=>p.id))}<th style="width:50px;">No</th><th style="width:230px;">Nama Program</th><th style="width:170px;">Waka</th><th style="width:120px;">Jenis</th><th style="width:290px;">Aksi</th></tr></thead>
+        <thead><tr>${bulkCheckboxHeaderCell('programs', programs.map(p=>p.id))}<th style="width:50px;">No</th><th style="width:230px;">Nama Program</th><th style="width:170px;">Waka</th><th style="width:120px;">Jenis</th><th style="width:290px;text-align:center;">Aksi</th></tr></thead>
         <tbody>${rows || `<tr class="empty-row"><td colspan="${bulkEnabled()?6:5}">Belum ada data program.</td></tr>`}</tbody>
       </table>
       </div>
@@ -1263,7 +1285,7 @@ function renderProgramHarianPage(){
       </td>
       <td style="font-size:13px;">${waktu}</td>
       <td>${ketepatan}</td>
-      <td><div class="row-actions">
+      <td><div class="row-actions center">
         <button class="btn btn-ghost btn-sm" onclick="openProgramModal('${p.id}')">Edit</button>
         <button class="btn btn-danger btn-sm" onclick="deleteProgram('${p.id}')">Hapus</button>
       </div></td>
@@ -1290,7 +1312,7 @@ function renderProgramHarianPage(){
       </div>
       <div class="tbl-wrap">
       <table>
-        <thead><tr>${bulkCheckboxHeaderCell('programsHarian', programs.map(p=>p.id))}<th style="width:50px;">No</th><th style="width:190px;">Nama Program</th><th style="width:140px;">Waka</th><th style="width:170px;">${canAccess('selesaiSemua') ? `<label style="display:flex;align-items:center;gap:8px;cursor:${eligiblePrograms.length>0?'pointer':'not-allowed'};font-weight:inherit;"><input type="checkbox" class="chk" ${allDone?'checked':''} ${eligiblePrograms.length===0?'disabled':''} onchange="toggleHarianSelesaiSemua(this.checked)">Selesai</label>` : 'Selesai'}</th><th style="width:160px;">Tanggal &amp; Jam</th><th style="width:130px;">Status</th><th style="width:150px;">Aksi</th></tr></thead>
+        <thead><tr>${bulkCheckboxHeaderCell('programsHarian', programs.map(p=>p.id))}<th style="width:50px;">No</th><th style="width:190px;">Nama Program</th><th style="width:140px;">Waka</th><th style="width:170px;">${canAccess('selesaiSemua') ? `<label style="display:flex;align-items:center;gap:8px;cursor:${eligiblePrograms.length>0?'pointer':'not-allowed'};font-weight:inherit;"><input type="checkbox" class="chk" ${allDone?'checked':''} ${eligiblePrograms.length===0?'disabled':''} onchange="toggleHarianSelesaiSemua(this.checked)">Selesai</label>` : 'Selesai'}</th><th style="width:160px;">Tanggal &amp; Jam</th><th style="width:130px;">Status</th><th style="width:150px;text-align:center;">Aksi</th></tr></thead>
         <tbody>${rows || `<tr class="empty-row"><td colspan="${bulkEnabled()?8:7}">Belum ada program harian.</td></tr>`}</tbody>
       </table>
       </div>
@@ -1673,7 +1695,7 @@ function renderApprovePage(){
       <td>${escapeHtml(wakaMap[s.wakaId]||'(waka dihapus)')}</td>
       <td>${formatDateOnly(s.diajukanPada)}</td>
       <td>${submissionStatusTag(s.status||'pending')}${catatan}</td>
-      <td><div class="row-actions">
+      <td><div class="row-actions center">
         ${s.foto ? `<button class="btn btn-ghost btn-sm" onclick="openFotoDetail('${s.id}')">&#128247; Foto</button>` : ''}
         <button class="btn btn-primary btn-sm" onclick="openApproveDecisionModal('${s.id}','disetujui')">Setujui</button>
         <button class="btn btn-danger btn-sm" onclick="openApproveDecisionModal('${s.id}','ditolak')">Tolak</button>
@@ -1704,7 +1726,7 @@ function renderApprovePage(){
       ${adminToolbar ? `<div class="card-head" style="border-top:1px solid var(--line);">${adminToolbar}</div>` : ''}
       <div class="tbl-wrap">
       <table>
-        <thead><tr>${checkboxTh}<th style="width:50px;">No</th><th style="width:220px;">Program</th><th style="width:170px;">Nama Waka</th><th style="width:130px;">Tanggal</th><th style="width:220px;">Status</th><th style="width:220px;">Aksi</th></tr></thead>
+        <thead><tr>${checkboxTh}<th style="width:50px;">No</th><th style="width:220px;">Program</th><th style="width:170px;">Nama Waka</th><th style="width:130px;">Tanggal</th><th style="width:220px;">Status</th><th style="width:220px;text-align:center;">Aksi</th></tr></thead>
         <tbody>${rows || `<tr class="empty-row"><td colspan="${colCount}">Belum ada program yang diajukan.</td></tr>`}</tbody>
       </table>
       </div>
@@ -1811,7 +1833,7 @@ function renderRekapPage(sub){
         <td>
           <div style="display:flex;align-items:center;gap:8px;">
             <div class="pbar-track" style="flex:1;margin-bottom:0;"><div class="pbar-fill" style="width:${Math.min(pct,100)}%"></div></div>
-            <b style="font-family:var(--font-head);font-size:14px;white-space:nowrap;">${pct}%</b>
+            <b style="font-family:var(--font-head);font-size:14px;white-space:nowrap;width:46px;text-align:center;flex-shrink:0;">${pct}%</b>
           </div>
         </td>
       </tr>`;
@@ -1830,7 +1852,7 @@ function renderRekapPage(sub){
       </div>
       <div class="tbl-wrap">
       <table>
-        <thead><tr><th style="width:50px;">No</th><th style="width:190px;">Nama Waka</th><th style="width:150px;">Jabatan</th><th style="width:140px;">Jumlah Program</th><th style="width:140px;">Jumlah Selesai</th><th style="width:170px;">Prosentase</th></tr></thead>
+        <thead><tr><th style="width:50px;">No</th><th style="width:190px;">Nama Waka</th><th style="width:150px;">Jabatan</th><th style="width:140px;">Jumlah Program</th><th style="width:140px;">Jumlah Selesai</th><th style="width:170px;text-align:center;">Prosentase</th></tr></thead>
         <tbody>${rows || `<tr class="empty-row"><td colspan="6">Belum ada data waka.</td></tr>`}</tbody>
       </table>
       </div>
@@ -1877,7 +1899,7 @@ function renderUserPage(sub){
       </td>
       <td>${escapeHtml(u.jabatan||'-')}</td>
       <td><span class="tag tag-role-${u.role==='admin'?'admin':(u.role==='kepala sekolah'?'kepsek':'waka')}">${capitalize(u.role)}</span></td>
-      <td><div class="row-actions">
+      <td><div class="row-actions center">
         <button class="btn btn-ghost btn-sm" onclick="openUserModal('${u.id}')">Edit</button>
         <button class="btn btn-danger btn-sm" onclick="deleteUser('${u.id}')">Hapus</button>
       </div></td>
@@ -1893,7 +1915,7 @@ function renderUserPage(sub){
       </div>
       <div class="tbl-wrap">
       <table>
-        <thead><tr>${bulkCheckboxHeaderCell('users', users.filter(u=>u.id!==(session&&session.userId)).map(u=>u.id))}<th style="width:50px;">No</th><th style="width:160px;">Username</th><th>Password</th><th style="width:190px;">Jabatan</th><th style="width:140px;">Role</th><th style="width:150px;">Aksi</th></tr></thead>
+        <thead><tr>${bulkCheckboxHeaderCell('users', users.filter(u=>u.id!==(session&&session.userId)).map(u=>u.id))}<th style="width:50px;">No</th><th style="width:160px;">Username</th><th style="width:290px;">Password</th><th style="width:290px;">Jabatan</th><th style="width:140px;">Role</th><th style="width:150px;text-align:center;">Aksi</th></tr></thead>
         <tbody>${rows || `<tr class="empty-row"><td colspan="${bulkEnabled()?7:6}">Belum ada akun.</td></tr>`}</tbody>
       </table>
       </div>
